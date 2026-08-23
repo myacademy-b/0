@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070812" />
+  <title>Nova Studio — YouTube Creator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --bg: #070812;
+      --panel: rgba(19, 21, 38, 0.72);
+      --text: #f6f7ff;
+      --muted: #a6aac4;
+      --line: rgba(255, 255, 255, 0.12);
+      --purple: #966cff;
+      --pink: #ff5e9c;
+      --cyan: #56dcff;
+      --success: #69e5a1;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(150, 108, 255, 0.2), transparent 30%),
+        radial-gradient(circle at 85% 70%, rgba(86, 220, 255, 0.13), transparent 28%),
+        var(--bg);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    body.locked {
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      opacity: 0.24;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, black, transparent 75%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 11px;
+      color: white;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      box-shadow: 0 8px 24px rgba(150, 108, 255, 0.35);
+    }
+
+    .nav-link {
+      color: var(--muted);
+      font-size: 0.92rem;
+      transition: color 0.25s ease;
+    }
+
+    .nav-link:hover {
+      color: white;
+    }
+
+    .hero {
+      display: grid;
+      min-height: calc(100vh - 100px);
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      gap: 70px;
+      padding: 50px 0 100px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #c9c7ff;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 14px var(--success);
+    }
+
+    h1 {
+      max-width: 650px;
+      margin: 22px 0 20px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(3.2rem, 7vw, 6.4rem);
+      line-height: 0.94;
+      letter-spacing: -0.08em;
+    }
+
+    h1 em {
+      color: var(--pink);
+      font-style: normal;
+      text-shadow: 0 0 35px rgba(255, 94, 156, 0.25);
+    }
+
+    .intro {
+      max-width: 530px;
+      margin: 0 0 30px;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 52px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 21px;
+      border: 0;
+      border-radius: 15px;
+      color: white;
+      background: linear-gradient(135deg, #ff426f, #b25cff);
+      box-shadow: 0 14px 28px rgba(185, 77, 255, 0.25);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 34px rgba(185, 77, 255, 0.38);
+    }
+
+    .button.secondary {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: none;
+    }
+
+    .button.secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .channel-card {
+      position: relative;
+      padding: 34px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.035));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      animation: float 7s ease-in-out infinite;
+    }
+
+    .channel-card::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -45px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      opacity: 0.28;
+      pointer-events: none;
+      background: var(--purple);
+      filter: blur(70px);
+    }
+
+    .profile {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .avatar {
+      display: grid;
+      width: 82px;
+      height: 82px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 3px solid rgba(255, 255, 255, 0.65);
+      border-radius: 28px;
+      color: white;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent),
+        linear-gradient(135deg, var(--pink), var(--purple));
+      box-shadow: 0 12px 30px rgba(255, 94, 156, 0.24);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .profile h2 {
+      margin: 0 0 5px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: -0.05em;
+    }
+
+    .profile p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 32px 0 24px;
+    }
+
+    .stat {
+      padding: 16px 12px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      background: rgba(0, 0, 0, 0.14);
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.25rem;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .card-note {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    .ads-section {
+      padding: 10px 0 110px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .section-kicker {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: #c9c7ff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .section-heading h2 {
+      max-width: 620px;
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .section-heading p {
+      max-width: 330px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.65;
+    }
+
+    .ads-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .ad-card {
+      position: relative;
+      display: flex;
+      min-height: 275px;
+      flex-direction: column;
+      padding: 20px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background:
+        linear-gradient(155deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.025)),
+        rgba(19, 21, 38, 0.58);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      backdrop-filter: blur(16px);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .ad-card::before {
+      content: "";
+      position: absolute;
+      top: -75px;
+      right: -70px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      opacity: 0.14;
+      pointer-events: none;
+      background: var(--purple);
+      filter: blur(55px);
+      transition: opacity 0.3s ease;
+    }
+
+    .ad-card:nth-child(3)::before,
+    .ad-card:nth-child(5)::before {
+      background: var(--cyan);
+    }
+
+    .ad-card:nth-child(4)::before {
+      background: var(--pink);
+    }
+
+    .ad-card:hover {
+      z-index: 1;
+      transform: translateY(-8px);
+      border-color: rgba(150, 108, 255, 0.62);
+      box-shadow: 0 26px 55px rgba(0, 0, 0, 0.32);
+    }
+
+    .ad-card:hover::before {
+      opacity: 0.3;
+    }
+
+    .ad-card.featured {
+      border-color: rgba(255, 94, 156, 0.34);
+      background:
+        linear-gradient(145deg, rgba(255, 94, 156, 0.17), rgba(150, 108, 255, 0.09)),
+        rgba(19, 21, 38, 0.72);
+    }
+
+    .ad-card-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .ad-indicator {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 13px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .ad-indicator::before {
+      content: "";
+      display: block;
+      width: 10px;
+      height: 10px;
+      margin: 15px auto;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      box-shadow: 0 0 16px rgba(150, 108, 255, 0.75);
+    }
+
+    .ad-badge {
+      padding: 6px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.16);
+      font-size: 0.64rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+
+    .ad-card h3 {
+      position: relative;
+      z-index: 1;
+      margin: 28px 0 10px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.18rem;
+      letter-spacing: -0.04em;
+    }
+
+    .ad-card p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.58;
+    }
+
+    .watch-ad-button {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      width: 100%;
+      min-height: 43px;
+      align-items: center;
+      justify-content: center;
+      margin-top: auto;
+      padding: 0 14px;
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 12px;
+      color: white;
+      background: rgba(255, 255, 255, 0.08);
+      font: inherit;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .watch-ad-button:hover {
+      transform: translateY(-2px);
+      border-color: transparent;
+      background: linear-gradient(135deg, #ff426f, #b25cff);
+    }
+
+    .watch-ad-button.success {
+      border-color: transparent;
+      background: linear-gradient(135deg, #42c97a, #56dcff);
+    }
+
+    .orb {
+      position: fixed;
+      z-index: -1;
+      width: 250px;
+      height: 250px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: spin 24s linear infinite;
+    }
+
+    .orb.one {
+      top: 18%;
+      right: -100px;
+    }
+
+    .orb.two {
+      bottom: -130px;
+      left: 8%;
+      width: 340px;
+      height: 340px;
+      animation-direction: reverse;
+    }
+
+    .modal {
+      position: fixed;
+      z-index: 10;
+      display: grid;
+      inset: 0;
+      place-items: center;
+      padding: 20px;
+      background: rgba(2, 3, 10, 0.72);
+      backdrop-filter: blur(16px);
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .modal.hidden {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .captcha {
+      width: min(470px, 100%);
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 27px;
+      background: #111326;
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
+      animation: modalIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .captcha-mark {
+      display: grid;
+      width: 52px;
+      height: 52px;
+      place-items: center;
+      margin-bottom: 19px;
+      border-radius: 16px;
+      background: rgba(150, 108, 255, 0.14);
+    }
+
+    .captcha-mark::before {
+      content: "";
+      width: 17px;
+      height: 17px;
+      border: 2px solid #d5c8ff;
+      border-radius: 6px;
+      transform: rotate(45deg);
+    }
+
+    .captcha h3 {
+      margin: 0 0 7px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.45rem;
+    }
+
+    .captcha-description {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .verify-box {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.045);
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .verify-box:hover {
+      border-color: rgba(150, 108, 255, 0.7);
+      background: rgba(150, 108, 255, 0.08);
+    }
+
+    .checkbox {
+      position: relative;
+      width: 25px;
+      height: 25px;
+      border: 2px solid #8589a5;
+      border-radius: 7px;
+      transition: all 0.3s ease;
+    }
+
+    .checkbox::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 8px;
+      width: 5px;
+      height: 10px;
+      border: solid transparent;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      transition: border-color 0.2s ease;
+    }
+
+    .verify-box.checked .checkbox {
+      border-color: var(--success);
+      background: var(--success);
+    }
+
+    .verify-box.checked .checkbox::after {
+      border-color: #07130c;
+    }
+
+    .verify-label {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .verify-label small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 400;
+    }
+
+    .captcha-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 21px;
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+
+    .captcha-footer button {
+      padding: 0;
+      border: 0;
+      color: #cfc5ff;
+      background: none;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .success-message {
+      display: none;
+      margin-top: 17px;
+      padding: 12px 14px;
+      border: 1px solid rgba(105, 229, 161, 0.25);
+      border-radius: 13px;
+      color: var(--success);
+      background: rgba(105, 229, 161, 0.08);
+      font-size: 0.83rem;
+    }
+
+    .success-message.show {
+      display: block;
+      animation: fadeUp 0.35s ease both;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-12px) rotate(0.6deg);
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes modalIn {
+      from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.96);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1050px) {
+      .ads-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 50px;
+        padding-top: 35px;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 15vw, 5rem);
+      }
+
+      .channel-card {
+        max-width: 600px;
+      }
+
+      .section-heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .section-heading p {
+        max-width: 560px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .ads-section {
+        padding-bottom: 70px;
+      }
+
+      .ads-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ad-card {
+        min-height: 225px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: min(100% - 28px, 1120px);
+      }
+
+      nav {
+        padding: 20px 0;
+      }
+
+      .channel-card,
+      .captcha {
+        padding: 23px;
+        border-radius: 23px;
+      }
+
+      .avatar {
+        width: 67px;
+        height: 67px;
+        border-radius: 22px;
+        font-size: 1.45rem;
+      }
+
+      .profile h2 {
+        font-size: 1.35rem;
+      }
+
+      .stats {
+        margin-top: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body class="locked">
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+
+  <div
+    class="modal"
+    id="captchaModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="captchaTitle"
+  >
+    <div class="captcha">
+      <div class="captcha-mark" aria-hidden="true"></div>
+
+      <h3 id="captchaTitle">Quick human check</h3>
+
+      <p class="captcha-description">
+        Complete this simple verification to unlock the channel page.
+      </p>
+
+      <div
+        class="verify-box"
+        id="verifyBox"
+        tabindex="0"
+        role="checkbox"
+        aria-checked="false"
+      >
+        <div class="checkbox" aria-hidden="true"></div>
+
+        <div class="verify-label">
+          I’m not a robot
+          <small>Privacy-friendly demo verification</small>
+        </div>
+      </div>
+
+      <div class="success-message" id="successMessage">
+        Verification complete. Welcome in.
+      </div>
+
+      <div class="captcha-footer">
+        <span>Protected access</span>
+        <button type="button" id="refreshCheck">Refresh check</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <nav>
+      <a class="brand" href="#">
+        <span class="brand-mark">N</span>
+        Nova Studio
+      </a>
+
+      <a class="nav-link" href="#channel">Explore channel</a>
+    </nav>
+
+    <section class="hero" id="channel">
+      <div>
+        <div class="eyebrow">
+          <span></span>
+          New videos every week
+        </div>
+
+        <h1>Create.<br /><em>Inspire.</em><br />Repeat.</h1>
+
+        <p class="intro">
+          Welcome to Nova Studio — a creative space for ideas, experiments,
+          and stories that make the internet a little more interesting.
+        </p>
+
+        <div class="hero-actions">
+          <a
+            class="button"
+            href="https://youtube.com/@adonistube9?si=DMhpvGlZHhTHfpmD"
+            target="_blank"
+            rel="noopener"
+          >
+            Subscribe on YouTube
+          </a>
+
+          <a class="button secondary" href="#ads">Why follow?</a>
+        </div>
+      </div>
+
+      <aside class="channel-card" id="about">
+        <div class="profile">
+          <div class="avatar">NS</div>
+
+          <div>
+            <h2>@NovaStudio</h2>
+            <p>Creative ideas, made simple.</p>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <strong>124K</strong>
+            <span>Subscribers</span>
+          </div>
+
+          <div class="stat">
+            <strong>86</strong>
+            <span>Videos</span>
+          </div>
+
+          <div class="stat">
+            <strong>4.9</strong>
+            <span>Community rating</span>
+          </div>
+        </div>
+
+        <a
+          class="button"
+          style="width: 100%"
+          href="https://youtube.com/@adonistube9?si=DMhpvGlZHhTHfpmD"
+          target="_blank"
+          rel="noopener"
+        >
+          Join the community
+        </a>
+
+        <p class="card-note">No spam. Just good content.</p>
+      </aside>
+    </section>
+
+    <section class="ads-section" id="ads">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">Support Nova Studio</span>
+          <h2>Watch ads, support the channel.</h2>
+        </div>
+
+        <p>
+          A quick ad view helps keep creative videos, experiments, and stories
+          coming.
+        </p>
+      </div>
+
+      <div class="ads-grid">
+        <article class="ad-card">
+          <div class="ad-card-top">
+            <span class="ad-indicator" aria-hidden="true"></span>
+            <span class="ad-badge">Sponsored</span>
+          </div>
+
+          <h3>Creator Spotlight</h3>
+
+          <p>
+            Discover tools and ideas built for the next generation of creators.
+          </p>
+
+          <button class="watch-ad-button" type="button">Watch ad</button>
+        </article>
+
+        <article class="ad-card featured">
+          <div class="ad-card-top">
+            <span class="ad-indicator" aria-hidden="true"></span>
+            <span class="ad-badge">Sponsored</span>
+          </div>
+
+          <h3>Level Up Your Setup</h3>
+
+          <p>
+            Explore creative gear and software that makes producing content
+            easier.
+          </p>
+
+          <button class="watch-ad-button" type="button">Watch ad</button>
+        </article>
+
+        <article class="ad-card">
+          <div class="ad-card-top">
+            <span class="ad-indicator" aria-hidden="true"></span>
+            <span class="ad-badge">Sponsored</span>
+          </div>
+
+          <h3>Fresh Ideas Daily</h3>
+
+          <p>
+            Find inspiration, useful resources, and trends worth knowing about.
+          </p>
+
+          <button class="watch-ad-button" type="button">Watch ad</button>
+        </article>
+
+        <article class="ad-card">
+          <div class="ad-card-top">
+            <span class="ad-indicator" aria-hidden="true"></span>
+            <span class="ad-badge">Sponsored</span>
+          </div>
+
+          <h3>Build Something Better</h3>
+
+          <p>
+            See products and services helping people turn great ideas into
+            action.
+          </p>
+
+          <button class="watch-ad-button" type="button">Watch ad</button>
+        </article>
+
+        <article class="ad-card">
+          <div class="ad-card-top">
+            <span class="ad-indicator" aria-hidden="true"></span>
+            <span class="ad-badge">Sponsored</span>
+          </div>
+
+          <h3>Community Picks</h3>
+
+          <p>
+            Take a look at a hand-picked sponsor message from our community.
+          </p>
+
+          <button class="watch-ad-button" type="button">Watch ad</button>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const modal = document.getElementById("captchaModal");
+    const verifyBox = document.getElementById("verifyBox");
+    const successMessage = document.getElementById("successMessage");
+    const refreshCheck = document.getElementById("refreshCheck");
+
+    function verify() {
+      if (verifyBox.classList.contains("checked")) return;
+
+      verifyBox.classList.add("checked");
+      verifyBox.setAttribute("aria-checked", "true");
+      successMessage.classList.add("show");
+
+      setTimeout(() => {
+        modal.classList.add("hidden");
+        document.body.classList.remove("locked");
+      }, 800);
+    }
+
+    function resetVerification() {
+      verifyBox.classList.remove("checked");
+      verifyBox.setAttribute("aria-checked", "false");
+      successMessage.classList.remove("show");
+    }
+
+    verifyBox.addEventListener("click", verify);
+
+    verifyBox.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        verify();
+      }
+    });
+
+    refreshCheck.addEventListener("click", resetVerification);
+
+    document.querySelectorAll(".watch-ad-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.classList.contains("success")) return;
+
+        const originalText = button.textContent;
+
+        button.classList.add("success");
+        button.textContent = "Ad ready";
+
+        setTimeout(() => {
+          button.classList.remove("success");
+          button.textContent = originalText;
+        }, 1800);
+      });
+    });
+  </script>
+</body>
+</html>
