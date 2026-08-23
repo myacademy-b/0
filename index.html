@@ -1060,19 +1060,10 @@
 
     refreshCheck.addEventListener("click", resetVerification);
 
+    // Updated: all "Watch ad" buttons now redirect to the specified URL
     document.querySelectorAll(".watch-ad-button").forEach((button) => {
       button.addEventListener("click", () => {
-        if (button.classList.contains("success")) return;
-
-        const originalText = button.textContent;
-
-        button.classList.add("success");
-        button.textContent = "Ad ready";
-
-        setTimeout(() => {
-          button.classList.remove("success");
-          button.textContent = originalText;
-        }, 1800);
+        window.location.href = "https://www.effectivecpmnetwork.com/fmnerbsv?key=72343dee0c9a9ef16e5ba69933d42fbc";
       });
     });
   </script>
