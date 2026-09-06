@@ -1,1071 +1,901 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#070812" />
-  <title>Nova Studio — YouTube Creator</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-    rel="stylesheet"
-  />
-
-  <style>
-    :root {
-      --bg: #070812;
-      --panel: rgba(19, 21, 38, 0.72);
-      --text: #f6f7ff;
-      --muted: #a6aac4;
-      --line: rgba(255, 255, 255, 0.12);
-      --purple: #966cff;
-      --pink: #ff5e9c;
-      --cyan: #56dcff;
-      --success: #69e5a1;
-      --shadow: 0 30px 90px rgba(0, 0, 0, 0.4);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      margin: 0;
-      overflow-x: hidden;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 15% 15%, rgba(150, 108, 255, 0.2), transparent 30%),
-        radial-gradient(circle at 85% 70%, rgba(86, 220, 255, 0.13), transparent 28%),
-        var(--bg);
-      font-family: "DM Sans", sans-serif;
-    }
-
-    body.locked {
-      overflow: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      z-index: -1;
-      inset: 0;
-      opacity: 0.24;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: linear-gradient(to bottom, black, transparent 75%);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font-family: inherit;
-    }
-
-    .container {
-      width: min(1120px, calc(100% - 40px));
-      margin: auto;
-    }
-
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 28px 0;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-    }
-
-    .brand-mark {
-      display: grid;
-      width: 34px;
-      height: 34px;
-      place-items: center;
-      border-radius: 11px;
-      color: white;
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      box-shadow: 0 8px 24px rgba(150, 108, 255, 0.35);
-    }
-
-    .nav-link {
-      color: var(--muted);
-      font-size: 0.92rem;
-      transition: color 0.25s ease;
-    }
-
-    .nav-link:hover {
-      color: white;
-    }
-
-    .hero {
-      display: grid;
-      min-height: calc(100vh - 100px);
-      grid-template-columns: 1.05fr 0.95fr;
-      align-items: center;
-      gap: 70px;
-      padding: 50px 0 100px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      color: #c9c7ff;
-      background: rgba(255, 255, 255, 0.05);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .eyebrow span {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 14px var(--success);
-    }
-
-    h1 {
-      max-width: 650px;
-      margin: 22px 0 20px;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: clamp(3.2rem, 7vw, 6.4rem);
-      line-height: 0.94;
-      letter-spacing: -0.08em;
-    }
-
-    h1 em {
-      color: var(--pink);
-      font-style: normal;
-      text-shadow: 0 0 35px rgba(255, 94, 156, 0.25);
-    }
-
-    .intro {
-      max-width: 530px;
-      margin: 0 0 30px;
-      color: var(--muted);
-      font-size: 1.08rem;
-      line-height: 1.7;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .button {
-      display: inline-flex;
-      min-height: 52px;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 0 21px;
-      border: 0;
-      border-radius: 15px;
-      color: white;
-      background: linear-gradient(135deg, #ff426f, #b25cff);
-      box-shadow: 0 14px 28px rgba(185, 77, 255, 0.25);
-      font: inherit;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 18px 34px rgba(185, 77, 255, 0.38);
-    }
-
-    .button.secondary {
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.06);
-      box-shadow: none;
-    }
-
-    .button.secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .channel-card {
-      position: relative;
-      padding: 34px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.035));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-      animation: float 7s ease-in-out infinite;
-    }
-
-    .channel-card::before {
-      content: "";
-      position: absolute;
-      top: -60px;
-      right: -45px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      opacity: 0.28;
-      pointer-events: none;
-      background: var(--purple);
-      filter: blur(70px);
-    }
-
-    .profile {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .avatar {
-      display: grid;
-      width: 82px;
-      height: 82px;
-      flex: 0 0 auto;
-      place-items: center;
-      border: 3px solid rgba(255, 255, 255, 0.65);
-      border-radius: 28px;
-      color: white;
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent),
-        linear-gradient(135deg, var(--pink), var(--purple));
-      box-shadow: 0 12px 30px rgba(255, 94, 156, 0.24);
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    .profile h2 {
-      margin: 0 0 5px;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 1.7rem;
-      letter-spacing: -0.05em;
-    }
-
-    .profile p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 32px 0 24px;
-    }
-
-    .stat {
-      padding: 16px 12px;
-      border: 1px solid var(--line);
-      border-radius: 17px;
-      background: rgba(0, 0, 0, 0.14);
-      text-align: center;
-    }
-
-    .stat strong {
-      display: block;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 1.25rem;
-    }
-
-    .stat span {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 0.72rem;
-    }
-
-    .card-note {
-      margin: 16px 0 0;
-      color: var(--muted);
-      font-size: 0.78rem;
-      text-align: center;
-    }
-
-    .ads-section {
-      padding: 10px 0 110px;
-    }
-
-    .section-heading {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 30px;
-      margin-bottom: 30px;
-    }
-
-    .section-kicker {
-      display: inline-block;
-      margin-bottom: 10px;
-      color: #c9c7ff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.11em;
-      text-transform: uppercase;
-    }
-
-    .section-heading h2 {
-      max-width: 620px;
-      margin: 0;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: clamp(2rem, 4vw, 3.25rem);
-      line-height: 1;
-      letter-spacing: -0.06em;
-    }
-
-    .section-heading p {
-      max-width: 330px;
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.65;
-    }
-
-    .ads-grid {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .ad-card {
-      position: relative;
-      display: flex;
-      min-height: 275px;
-      flex-direction: column;
-      padding: 20px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background:
-        linear-gradient(155deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.025)),
-        rgba(19, 21, 38, 0.58);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-      backdrop-filter: blur(16px);
-      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .ad-card::before {
-      content: "";
-      position: absolute;
-      top: -75px;
-      right: -70px;
-      width: 160px;
-      height: 160px;
-      border-radius: 50%;
-      opacity: 0.14;
-      pointer-events: none;
-      background: var(--purple);
-      filter: blur(55px);
-      transition: opacity 0.3s ease;
-    }
-
-    .ad-card:nth-child(3)::before,
-    .ad-card:nth-child(5)::before {
-      background: var(--cyan);
-    }
-
-    .ad-card:nth-child(4)::before {
-      background: var(--pink);
-    }
-
-    .ad-card:hover {
-      z-index: 1;
-      transform: translateY(-8px);
-      border-color: rgba(150, 108, 255, 0.62);
-      box-shadow: 0 26px 55px rgba(0, 0, 0, 0.32);
-    }
-
-    .ad-card:hover::before {
-      opacity: 0.3;
-    }
-
-    .ad-card.featured {
-      border-color: rgba(255, 94, 156, 0.34);
-      background:
-        linear-gradient(145deg, rgba(255, 94, 156, 0.17), rgba(150, 108, 255, 0.09)),
-        rgba(19, 21, 38, 0.72);
-    }
-
-    .ad-card-top {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .ad-indicator {
-      width: 42px;
-      height: 42px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 13px;
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .ad-indicator::before {
-      content: "";
-      display: block;
-      width: 10px;
-      height: 10px;
-      margin: 15px auto;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      box-shadow: 0 0 16px rgba(150, 108, 255, 0.75);
-    }
-
-    .ad-badge {
-      padding: 6px 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(0, 0, 0, 0.16);
-      font-size: 0.64rem;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-    }
-
-    .ad-card h3 {
-      position: relative;
-      z-index: 1;
-      margin: 28px 0 10px;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 1.18rem;
-      letter-spacing: -0.04em;
-    }
-
-    .ad-card p {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.84rem;
-      line-height: 1.58;
-    }
-
-    .watch-ad-button {
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      width: 100%;
-      min-height: 43px;
-      align-items: center;
-      justify-content: center;
-      margin-top: auto;
-      padding: 0 14px;
-      border: 1px solid rgba(255, 255, 255, 0.13);
-      border-radius: 12px;
-      color: white;
-      background: rgba(255, 255, 255, 0.08);
-      font: inherit;
-      font-size: 0.84rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
-    }
-
-    .watch-ad-button:hover {
-      transform: translateY(-2px);
-      border-color: transparent;
-      background: linear-gradient(135deg, #ff426f, #b25cff);
-    }
-
-    .watch-ad-button.success {
-      border-color: transparent;
-      background: linear-gradient(135deg, #42c97a, #56dcff);
-    }
-
-    .orb {
-      position: fixed;
-      z-index: -1;
-      width: 250px;
-      height: 250px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 50%;
-      pointer-events: none;
-      animation: spin 24s linear infinite;
-    }
-
-    .orb.one {
-      top: 18%;
-      right: -100px;
-    }
-
-    .orb.two {
-      bottom: -130px;
-      left: 8%;
-      width: 340px;
-      height: 340px;
-      animation-direction: reverse;
-    }
-
-    .modal {
-      position: fixed;
-      z-index: 10;
-      display: grid;
-      inset: 0;
-      place-items: center;
-      padding: 20px;
-      background: rgba(2, 3, 10, 0.72);
-      backdrop-filter: blur(16px);
-      transition: opacity 0.35s ease, visibility 0.35s ease;
-    }
-
-    .modal.hidden {
-      visibility: hidden;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .captcha {
-      width: min(470px, 100%);
-      padding: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 27px;
-      background: #111326;
-      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.55);
-      animation: modalIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .captcha-mark {
-      display: grid;
-      width: 52px;
-      height: 52px;
-      place-items: center;
-      margin-bottom: 19px;
-      border-radius: 16px;
-      background: rgba(150, 108, 255, 0.14);
-    }
-
-    .captcha-mark::before {
-      content: "";
-      width: 17px;
-      height: 17px;
-      border: 2px solid #d5c8ff;
-      border-radius: 6px;
-      transform: rotate(45deg);
-    }
-
-    .captcha h3 {
-      margin: 0 0 7px;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 1.45rem;
-    }
-
-    .captcha-description {
-      margin: 0 0 22px;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.55;
-    }
-
-    .verify-box {
-      display: flex;
-      align-items: center;
-      gap: 13px;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.045);
-      cursor: pointer;
-      user-select: none;
-      transition: border-color 0.25s ease, background 0.25s ease;
-    }
-
-    .verify-box:hover {
-      border-color: rgba(150, 108, 255, 0.7);
-      background: rgba(150, 108, 255, 0.08);
-    }
-
-    .checkbox {
-      position: relative;
-      width: 25px;
-      height: 25px;
-      border: 2px solid #8589a5;
-      border-radius: 7px;
-      transition: all 0.3s ease;
-    }
-
-    .checkbox::after {
-      content: "";
-      position: absolute;
-      top: 4px;
-      left: 8px;
-      width: 5px;
-      height: 10px;
-      border: solid transparent;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-      transition: border-color 0.2s ease;
-    }
-
-    .verify-box.checked .checkbox {
-      border-color: var(--success);
-      background: var(--success);
-    }
-
-    .verify-box.checked .checkbox::after {
-      border-color: #07130c;
-    }
-
-    .verify-label {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .verify-label small {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 400;
-    }
-
-    .captcha-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 21px;
-      color: var(--muted);
-      font-size: 0.72rem;
-    }
-
-    .captcha-footer button {
-      padding: 0;
-      border: 0;
-      color: #cfc5ff;
-      background: none;
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .success-message {
-      display: none;
-      margin-top: 17px;
-      padding: 12px 14px;
-      border: 1px solid rgba(105, 229, 161, 0.25);
-      border-radius: 13px;
-      color: var(--success);
-      background: rgba(105, 229, 161, 0.08);
-      font-size: 0.83rem;
-    }
-
-    .success-message.show {
-      display: block;
-      animation: fadeUp 0.35s ease both;
-    }
-
-    @keyframes float {
-      0%,
-      100% {
-        transform: translateY(0) rotate(0deg);
-      }
-
-      50% {
-        transform: translateY(-12px) rotate(0.6deg);
-      }
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    @keyframes modalIn {
-      from {
-        opacity: 0;
-        transform: translateY(22px) scale(0.96);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(7px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 1050px) {
-      .ads-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-
-    @media (max-width: 800px) {
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 50px;
-        padding-top: 35px;
-      }
-
-      h1 {
-        font-size: clamp(3rem, 15vw, 5rem);
-      }
-
-      .channel-card {
-        max-width: 600px;
-      }
-
-      .section-heading {
-        align-items: start;
-        flex-direction: column;
-        gap: 14px;
-      }
-
-      .section-heading p {
-        max-width: 560px;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .ads-section {
-        padding-bottom: 70px;
-      }
-
-      .ads-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .ad-card {
-        min-height: 225px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        width: min(100% - 28px, 1120px);
-      }
-
-      nav {
-        padding: 20px 0;
-      }
-
-      .channel-card,
-      .captcha {
-        padding: 23px;
-        border-radius: 23px;
-      }
-
-      .avatar {
-        width: 67px;
-        height: 67px;
-        border-radius: 22px;
-        font-size: 1.45rem;
-      }
-
-      .profile h2 {
-        font-size: 1.35rem;
-      }
-
-      .stats {
-        margin-top: 24px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>WORKDESK - Remote Jobs</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(59,130,246,.14), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(99,102,241,.12), transparent 22%),
+    #0b0b0f;
+  color:#fff;
+  -webkit-tap-highlight-color:transparent;
+  scroll-behavior:smooth;
+  overflow-x:hidden;
+  max-width:100vw;
+}
+img{max-width:100%;display:block}
+button,input{font:inherit}
+
+.jobs-section{
+  background:transparent;
+  padding:14px 12px 42px;
+  position:relative;
+  pointer-events:auto;
+}
+.jobs-section::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 18%, transparent 82%, rgba(255,255,255,.02));
+  pointer-events:none;
+}
+.jobs-container{
+  position:relative;
+  z-index:1;
+  max-width:100%;
+  margin:0 auto;
+  pointer-events:auto;
+}
+.brand-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:4px 0 10px;
+  padding:0 2px;
+  pointer-events:auto;
+}
+.brand-icon{
+  width:28px;
+  height:28px;
+  flex:0 0 28px;
+  display:block;
+  border-radius:8px;
+  object-fit:contain;
+  box-shadow:0 0 16px rgba(76,122,255,.35);
+  transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
+  will-change:transform, box-shadow;
+  pointer-events:auto;
+}
+.brand-icon:hover{
+  transform:translateY(-2px) rotate(-6deg) scale(1.06);
+  box-shadow:0 0 18px rgba(76,122,255,.55), 0 0 34px rgba(76,122,255,.22);
+  filter:saturate(1.12) brightness(1.05);
+}
+.brand-name{
+  font-size:.95rem;
+  font-weight:900;
+  letter-spacing:1.2px;
+  color:#fff;
+  text-transform:uppercase;
+  text-shadow:0 0 14px rgba(255,255,255,.14);
+  pointer-events:auto;
+}
+.jobs-header{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+  gap:8px;
+  pointer-events:auto;
+}
+.jobs-header h2{
+  font-size:1.2rem;
+  font-weight:800;
+  color:#fff;
+}
+.jobs-header span{
+  color:#6d6d7b;
+  font-size:.72rem;
+}
+.search-bar{
+  width:100%;
+  padding:12px 16px;
+  border-radius:25px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  color:#fff;
+  font-size:16px;
+  margin-bottom:12px;
+  outline:none;
+  -webkit-appearance:none;
+  transition:border-color .25s, box-shadow .25s, background .25s;
+  pointer-events:auto;
+}
+.search-bar:focus{
+  border-color:#4f8cff;
+  box-shadow:0 0 0 3px rgba(79,140,255,.12);
+  background:rgba(255,255,255,.07);
+}
+.search-bar::placeholder{color:#444}
+.filter-bar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:14px;
+  overflow-x:auto;
+  padding-bottom:4px;
+  -webkit-overflow-scrolling:touch;
+  pointer-events:auto;
+}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-btn{
+  padding:5px 14px;
+  border-radius:20px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  color:#9a9aad;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .2s, box-shadow .25s, border-color .25s, background .25s, color .25s;
+  font-size:.7rem;
+  white-space:nowrap;
+  flex-shrink:0;
+  pointer-events:auto;
+}
+.filter-btn:hover,.filter-btn.active{
+  background:rgba(59,130,246,.16);
+  border-color:#4f8cff;
+  color:#fff;
+  box-shadow:0 0 18px rgba(79,140,255,.16);
+}
+.job-card{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:14px 16px;
+  margin-bottom:12px;
+  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease;
+  cursor:pointer;
+  overflow:hidden;
+  position:relative;
+  pointer-events:auto;
+}
+.job-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, transparent 0%, rgba(79,140,255,.08) 50%, transparent 100%);
+  opacity:0;
+  transition:opacity .25s ease;
+  pointer-events:none;
+}
+.job-card:hover,
+.job-card:focus-within{
+  transform:translateY(-3px);
+  border-color:rgba(79,140,255,.45);
+  box-shadow:0 12px 28px rgba(0,0,0,.28), 0 0 0 1px rgba(79,140,255,.08), 0 0 18px rgba(79,140,255,.12);
+}
+.job-card:hover::before,
+.job-card:focus-within::before{opacity:1}
+.job-card:active{transform:scale(.985)}
+.job-card:last-child{margin-bottom:0}
+.job-card-top{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:6px;
+  margin-bottom:4px;
+  pointer-events:auto;
+}
+.job-title{
+  font-size:.95rem;
+  font-weight:800;
+  color:#fff;
+  flex:1;
+  min-width:60%;
+  pointer-events:auto;
+}
+.job-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  align-items:center;
+  font-size:.7rem;
+  color:#777;
+  margin-bottom:6px;
+  pointer-events:auto;
+}
+.job-meta .company{
+  color:#7ea5ff;
+  font-weight:700;
+  pointer-events:auto;
+}
+.job-meta .badge{
+  padding:2px 8px;
+  border-radius:20px;
+  font-size:.55rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+  pointer-events:auto;
+}
+.badge-parttime{background:rgba(59,130,246,.12);color:#8eb5ff;border:1px solid rgba(79,140,255,.2)}
+.badge-easy{background:rgba(255,255,255,.05);color:#d8dbea;border:1px solid rgba(255,255,255,.08)}
+.badge-medium{background:rgba(59,130,246,.12);color:#8eb5ff;border:1px solid rgba(79,140,255,.2)}
+.salary{
+  font-size:.9rem;
+  font-weight:800;
+  color:#8eb5ff;
+  white-space:nowrap;
+  text-shadow:0 0 10px rgba(79,140,255,.25);
+  pointer-events:auto;
+}
+.job-desc{
+  color:#8a8a99;
+  font-size:.78rem;
+  margin:6px 0 8px;
+  line-height:1.45;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  pointer-events:auto;
+}
+.job-card-bottom{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-top:2px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.05);
+  pointer-events:auto;
+}
+.job-posted{color:#4a4a58;font-size:.65rem;pointer-events:auto;}
+
+.apply-btn{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  background:linear-gradient(180deg,#69a0ff,#3c74ef);
+  border:none;
+  padding:7px 18px;
+  border-radius:25px;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .2s, box-shadow .25s, filter .25s;
+  font-size:.75rem;
+  -webkit-tap-highlight-color:transparent;
+  box-shadow:0 0 14px rgba(76,122,255,.18), 0 8px 18px rgba(0,0,0,.2);
+  pointer-events:auto;
+}
+.apply-btn::before{
+  content:'';
+  position:absolute;
+  inset:-2px;
+  background:linear-gradient(90deg, transparent 0%, rgba(120,170,255,.18) 25%, rgba(180,220,255,.45) 50%, rgba(120,170,255,.18) 75%, transparent 100%);
+  transform:translateX(-120%);
+  filter:blur(8px);
+  opacity:.7;
+  z-index:-1;
+  transition:opacity .25s ease;
+}
+.apply-btn::after{
+  content:'';
+  position:absolute;
+  inset:-1px;
+  border-radius:inherit;
+  box-shadow:0 0 0 1px rgba(120,170,255,.08), 0 0 18px rgba(76,122,255,.12), 0 0 28px rgba(76,122,255,.08);
+  opacity:.55;
+  pointer-events:none;
+}
+.apply-btn:hover{
+  box-shadow:0 0 16px rgba(76,122,255,.45), 0 0 30px rgba(76,122,255,.2), 0 8px 18px rgba(0,0,0,.2);
+  filter:saturate(1.08);
+}
+.apply-btn:hover::before{
+  animation:glowTrail 1.35s linear infinite;
+  opacity:1;
+}
+@keyframes glowTrail{
+  from{transform:translateX(-120%)}
+  to{transform:translateX(120%)}
+}
+.apply-btn:active{transform:scale(.94)}
+
+/* Application form section styles */
+.application-section{
+  display:none;
+  background:transparent;
+  padding:14px 12px 42px;
+  position:relative;
+  pointer-events:auto;
+}
+.application-section::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 18%, transparent 82%, rgba(255,255,255,.02));
+  pointer-events:none;
+}
+.application-container{
+  position:relative;
+  z-index:1;
+  max-width:100%;
+  margin:0 auto;
+  pointer-events:auto;
+}
+.app-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+  pointer-events:auto;
+}
+.app-title{
+  font-size:1.1rem;
+  font-weight:800;
+  color:#fff;
+  pointer-events:auto;
+}
+.back-btn{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:#fff;
+  padding:6px 14px;
+  border-radius:20px;
+  font-weight:700;
+  font-size:.75rem;
+  cursor:pointer;
+  transition:background .2s, border-color .2s, transform .15s;
+  pointer-events:auto;
+}
+.back-btn:hover{
+  background:rgba(79,140,255,.18);
+  border-color:#4f8cff;
+}
+.back-btn:active{
+  transform:scale(.96);
+}
+.app-form{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:16px;
+  pointer-events:auto;
+}
+.form-group{
+  margin-bottom:14px;
+  pointer-events:auto;
+}
+.form-label{
+  display:block;
+  font-size:.78rem;
+  font-weight:700;
+  color:#c7c7d6;
+  margin-bottom:6px;
+  pointer-events:auto;
+}
+.form-input,
+.form-textarea,
+.form-select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  color:#fff;
+  font-size:.9rem;
+  outline:none;
+  transition:border-color .2s, box-shadow .2s, background .2s;
+  pointer-events:auto;
+}
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus{
+  border-color:#4f8cff;
+  box-shadow:0 0 0 3px rgba(79,140,255,.12);
+  background:rgba(255,255,255,.08);
+}
+.form-textarea{
+  min-height:80px;
+  resize:vertical;
+}
+.form-submit{
+  width:100%;
+  background:linear-gradient(180deg,#69a0ff,#3c74ef);
+  border:none;
+  padding:12px 18px;
+  border-radius:25px;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  transition:transform .2s, box-shadow .25s, filter .25s;
+  font-size:.9rem;
+  box-shadow:0 0 14px rgba(76,122,255,.18), 0 8px 18px rgba(0,0,0,.2);
+  pointer-events:auto;
+}
+.form-submit:hover{
+  box-shadow:0 0 16px rgba(76,122,255,.45), 0 0 30px rgba(76,122,255,.2), 0 8px 18px rgba(0,0,0,.2);
+  filter:saturate(1.08);
+}
+.form-submit:active{
+  transform:scale(.96);
+}
+
+/* Popup/Overlay styles */
+.popup-overlay {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.7);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:9999;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  animation:fadeIn .3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+@keyframes slideUp {
+  from { transform:translateY(30px) scale(0.97); opacity:0; }
+  to { transform:translateY(0) scale(1); opacity:1; }
+}
+
+.popup-modal {
+  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:32px 28px 28px;
+  max-width:480px;
+  width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(76,122,255,.08);
+  animation:slideUp .35s ease;
+  position:relative;
+}
+
+.popup-icon {
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:rgba(79,140,255,.15);
+  border:1px solid rgba(79,140,255,.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 18px;
+  font-size:28px;
+}
+
+.popup-title {
+  font-size:1.05rem;
+  font-weight:800;
+  color:#fff;
+  text-align:center;
+  margin-bottom:12px;
+  line-height:1.3;
+}
+
+.popup-message {
+  color:#b0b0c0;
+  font-size:.9rem;
+  line-height:1.6;
+  text-align:center;
+  margin-bottom:22px;
+  padding:0 4px;
+}
+
+.popup-continue-btn {
+  display:block;
+  width:100%;
+  background:linear-gradient(180deg,#69a0ff,#3c74ef);
+  border:none;
+  padding:12px 18px;
+  border-radius:25px;
+  color:#fff;
+  font-weight:800;
+  font-size:.9rem;
+  cursor:pointer;
+  transition:transform .2s, box-shadow .25s, filter .25s;
+  box-shadow:0 0 14px rgba(76,122,255,.18), 0 8px 18px rgba(0,0,0,.2);
+  text-align:center;
+  text-decoration:none;
+  pointer-events:auto;
+}
+
+.popup-continue-btn:hover {
+  box-shadow:0 0 16px rgba(76,122,255,.45), 0 0 30px rgba(76,122,255,.2), 0 8px 18px rgba(0,0,0,.2);
+  filter:saturate(1.08);
+  transform:translateY(-1px);
+}
+
+.popup-continue-btn:active {
+  transform:scale(.96);
+}
+
+.popup-shield {
+  color:#4f8cff;
+  font-size:30px;
+}
+
+@media(min-width:600px){
+  .jobs-section{padding:18px 24px 50px}
+  .jobs-container{max-width:90%}
+  .job-card{padding:18px 22px}
+  .job-title{font-size:1.05rem}
+
+  .application-section{padding:18px 24px 50px}
+  .application-container{max-width:90%}
+  
+  .popup-modal{padding:36px 32px 30px}
+}
+@media(min-width:1024px){
+  .jobs-container{max-width:900px}
+  .job-card:hover{transform:translateY(-4px)}
+
+  .application-container{max-width:900px}
+}
+button,.filter-btn,.apply-btn{
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
+</style>
 </head>
+<body>
 
-<body class="locked">
-  <div class="orb one"></div>
-  <div class="orb two"></div>
+<!-- Jobs List Section -->
+<section class="jobs-section" id="jobs">
+  <div class="jobs-container">
+    <div class="brand-row">
+      <img class="brand-icon" src="https://user-gen-media-assets.s3.amazonaws.com/seedream_images/c3499f90-7f63-45b4-98e7-5cb1561d4197.png" alt="WORKDESK logo">
+      <div class="brand-name">WORKDESK</div>
+    </div>
 
-  <div
-    class="modal"
-    id="captchaModal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="captchaTitle"
-  >
-    <div class="captcha">
-      <div class="captcha-mark" aria-hidden="true"></div>
+    <div class="jobs-header">
+      <h2>Available Jobs</h2>
+      <span>6 jobs</span>
+    </div>
 
-      <h3 id="captchaTitle">Quick human check</h3>
+    <input class="search-bar" type="text" placeholder="Search jobs..." id="searchInput">
 
-      <p class="captcha-description">
-        Complete this simple verification to unlock the channel page.
-      </p>
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="part-time">Part-Time</button>
+      <button class="filter-btn" data-filter="easy">Easy</button>
+      <button class="filter-btn" data-filter="medium">Medium</button>
+    </div>
 
-      <div
-        class="verify-box"
-        id="verifyBox"
-        tabindex="0"
-        role="checkbox"
-        aria-checked="false"
-      >
-        <div class="checkbox" aria-hidden="true"></div>
+    <div id="jobList"></div>
+  </div>
+</section>
 
-        <div class="verify-label">
-          I’m not a robot
-          <small>Privacy-friendly demo verification</small>
-        </div>
+<!-- Application Form Section -->
+<section class="application-section" id="applicationSection">
+  <div class="application-container">
+    <div class="app-header">
+      <div class="app-title" id="appJobTitle">Apply for Job</div>
+      <button class="back-btn" id="backToJobs">← Back to Jobs</button>
+    </div>
+
+    <form class="app-form" id="applicationForm">
+      <input type="hidden" id="applyJobId">
+
+      <div class="form-group">
+        <label class="form-label" for="fullName">Full Name</label>
+        <input class="form-input" type="text" id="fullName" required>
       </div>
 
-      <div class="success-message" id="successMessage">
-        Verification complete. Welcome in.
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input class="form-input" type="email" id="email" required>
       </div>
 
-      <div class="captcha-footer">
-        <span>Protected access</span>
-        <button type="button" id="refreshCheck">Refresh check</button>
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone Number</label>
+        <input class="form-input" type="tel" id="phone" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="experience">Years of Experience</label>
+        <select class="form-select" id="experience" required>
+          <option value="">Select...</option>
+          <option value="0-1">0–1 year</option>
+          <option value="1-3">1–3 years</option>
+          <option value="3-5">3–5 years</option>
+          <option value="5+">5+ years</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="whyInterested">Why are you interested in this role?</label>
+        <textarea class="form-textarea" id="whyInterested" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="availability">When can you start?</label>
+        <input class="form-input" type="text" id="availability" placeholder="e.g. Immediately, 2 weeks, 1 month" required>
+      </div>
+
+      <!-- Additional questions -->
+      <div class="form-group">
+        <label class="form-label">1. If Moniepoint's engagement rate suddenly dropped by 40% this month, how would you investigate?</label>
+        <textarea class="form-textarea" name="q1" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">2. How would you measure whether a social media campaign was successful?</label>
+        <textarea class="form-textarea" name="q2" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">3. Moniepoint launches a new feature. How would you turn that into a social media campaign?</label>
+        <textarea class="form-textarea" name="q3" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">4. A customer tweets that ₦500,000 was deducted from their account and calls Moniepoint a scam. What do you do?</label>
+        <textarea class="form-textarea" name="q4" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">5. What would you do if a Moniepoint post started receiving thousands of negative comments?</label>
+        <textarea class="form-textarea" name="q5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">6. How would you create content for both POS agents and personal banking customers without confusing the brand?</label>
+        <textarea class="form-textarea" name="q6" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">7. Give me five content pillars you would use for Moniepoint.</label>
+        <textarea class="form-textarea" name="q7" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">8. How would you use Nigerian trends without damaging the credibility of a fintech brand?</label>
+        <textarea class="form-textarea" name="q8" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">9. A TikTok/Reel gets 2 million views but produces almost no conversions. Another gets 100,000 views and generates hundreds of sign-ups. Which is more successful?</label>
+        <textarea class="form-textarea" name="q9" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">10. What would you do if a competitor launched a campaign that was performing extremely well?</label>
+        <textarea class="form-textarea" name="q10" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">11. How would you perform a social media audit of Moniepoint?</label>
+        <textarea class="form-textarea" name="q11" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">12. What KPIs would you put on a monthly social media report for management?</label>
+        <textarea class="form-textarea" name="q12" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">13. How would you determine what type of content Moniepoint's audience wants?</label>
+        <textarea class="form-textarea" name="q13" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">14. If you had ₦1 million to promote a social media campaign, how would you allocate it?</label>
+        <textarea class="form-textarea" name="q14" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">15. How would you turn customer complaints into content opportunities?</label>
+        <textarea class="form-textarea" name="q15" required></textarea>
+      </div>
+
+      <button class="form-submit" type="submit">Submit Application</button>
+    </form>
+  </div>
+</section>
+
+<!-- Verification Popup -->
+<div class="popup-overlay" id="verificationPopup">
+  <div class="popup-modal">
+    <div class="popup-icon">
+      <span class="popup-shield">🛡️</span>
+    </div>
+    <div class="popup-title">Verification Required</div>
+    <div class="popup-message">
+      Due to malicious activities from bot users we have added a one step verification to Verify users before filling the Application form.
+    </div>
+    <a href="https://appsave.store/cl/i/7jwm8n" class="popup-continue-btn" id="popupContinueBtn">Continue →</a>
+  </div>
+</div>
+
+<script>
+const jobs = [
+  {id:1,title:"Virtual Assistant (Administrative Support)",company:"TechCorp",type:"Part-Time",salary:"$4500/month",difficulty:"Easy",posted:"Posted 2 days ago",description:"Provide administrative support, scheduling, and light project coordination for remote teams.",fullDesc:"We are seeking a reliable Virtual Assistant to provide administrative support to our distributed team. You'll manage calendars, handle email triage, schedule meetings, and support day-to-day operations to keep projects on track.",requirements:["2+ years administrative or VA experience","Strong written and verbal English","Comfortable with Google Workspace and calendar tools","Reliable internet and good communication skills"],benefits:["Competitive remote salary","Flexible working hours","Career growth opportunities"]},
+  {id:2,title:"Virtual Assistant (Customer Support)",company:"RemoteFirst",type:"Part-Time",salary:"$3500/month",difficulty:"Medium",posted:"Posted 2 days ago",description:"Handle customer inquiries, troubleshoot issues, and provide friendly support across channels.",fullDesc:"We are looking for a Customer Support Virtual Assistant to join our remote team. You will be the first point of contact for customers, resolving issues and ensuring a positive experience across email, chat, and phone.",requirements:["1+ years customer support experience","Excellent communication skills","Experience with CRM tools","Problem-solving mindset"],benefits:["Competitive salary","Health insurance","Paid time off"]},
+  {id:3,title:"Virtual Assistant (Social Media Manager)",company:"DigitalWorks",type:"Part-Time",salary:"$4500/month",difficulty:"Easy",posted:"Posted 2 days ago",description:"Manage social media accounts, create content, and engage with online communities.",fullDesc:"We are seeking a creative Virtual Assistant to manage our social media presence. You'll create engaging content, schedule posts, interact with followers, and analyze performance metrics across platforms.",requirements:["2+ years social media management experience","Content creation skills","Knowledge of social media analytics","Graphic design experience a plus"],benefits:["High salary","Flexible schedule","Performance bonuses"]},
+  {id:4,title:"Virtual Assistant (Data Entry Specialist)",company:"CloudStaff",type:"Part-Time",salary:"$4000/month",difficulty:"Medium",posted:"Posted 2 days ago",description:"Accurate data entry, database management, and document organization.",fullDesc:"We need a detail-oriented Data Entry Virtual Assistant to maintain and update our databases. You'll ensure data accuracy, organize digital files, and support various administrative tasks.",requirements:["Data entry experience","High attention to detail","Proficient in Excel/Google Sheets","Fast typing speed"],benefits:["Flexible hours","Work from home","Weekly payments"]},
+  {id:5,title:"Virtual Assistant (Executive Support)",company:"GlobalTalent",type:"Part-Time",salary:"$3000/month",difficulty:"Easy",posted:"Posted 2 days ago",description:"Executive-level support including travel booking, expense tracking, and email management.",fullDesc:"We are looking for an experienced Executive Virtual Assistant to support C-level executives. You'll manage complex calendars, book travel, prepare reports, and handle confidential correspondence.",requirements:["3+ years executive assistant experience","Strong organizational skills","Discretion and professionalism","Proficient in Microsoft Office"],benefits:["Premium salary","Annual bonus","Professional development"]},
+  {id:6,title:"Virtual Assistant (Project Coordinator)",company:"VirtuSolve",type:"Part-Time",salary:"$3600/month",difficulty:"Medium",posted:"Posted 2 days ago",description:"Coordinate projects, track deadlines, and facilitate team communication.",fullDesc:"We are seeking a Project Coordinator Virtual Assistant to help manage multiple projects simultaneously. You'll track progress, communicate with stakeholders, and ensure deadlines are met.",requirements:["Project coordination experience","Strong communication skills","Familiar with project management tools","Ability to multitask"],benefits:["Competitive pay","Remote work","Growth opportunities"]}
+];
+
+const jobsSection = document.getElementById('jobs');
+const applicationSection = document.getElementById('applicationSection');
+const appJobTitle = document.getElementById('appJobTitle');
+const applyJobIdInput = document.getElementById('applyJobId');
+const applicationForm = document.getElementById('applicationForm');
+const backToJobsBtn = document.getElementById('backToJobs');
+const verificationPopup = document.getElementById('verificationPopup');
+const popupContinueBtn = document.getElementById('popupContinueBtn');
+
+// Store the job ID to apply after verification
+let pendingJobId = null;
+
+function showVerificationPopup(jobId) {
+  pendingJobId = jobId;
+  verificationPopup.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function hideVerificationPopup() {
+  verificationPopup.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Close popup if user clicks outside the modal
+verificationPopup.addEventListener('click', function(e) {
+  if (e.target === this) {
+    hideVerificationPopup();
+  }
+});
+
+// Continue button redirects to the provided link
+popupContinueBtn.addEventListener('click', function(e) {
+  // The href already handles the redirect
+  // We just hide the popup before navigation
+  hideVerificationPopup();
+});
+
+function showApplicationForm(jobId) {
+  // Show verification popup first instead of directly showing the form
+  showVerificationPopup(jobId);
+}
+
+// This function is called after verification (when Continue is clicked)
+function proceedToApplication(jobId) {
+  if (!jobId) return;
+  
+  const job = jobs.find(j => j.id === jobId);
+  if(!job) return;
+
+  appJobTitle.textContent = `Apply for: ${job.title}`;
+  applyJobIdInput.value = job.id;
+
+  jobsSection.style.display = 'none';
+  applicationSection.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Override the Continue button behavior to first hide popup, 
+// then proceed to application (in case we want to stay on page)
+// But since the requirement says redirect to the link, we keep the href redirect.
+// The user will be redirected to the external link.
+
+function showJobsList(){
+  applicationSection.style.display = 'none';
+  jobsSection.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+backToJobsBtn.addEventListener('click', function(e){
+  e.preventDefault();
+  showJobsList();
+});
+
+applicationForm.addEventListener('submit', function(e){
+  e.preventDefault();
+
+  const jobId = parseInt(applyJobIdInput.value, 10);
+  const job = jobs.find(j => j.id === jobId);
+
+  const formData = {
+    jobId,
+    jobTitle: job ? job.title : '',
+    fullName: document.getElementById('fullName').value.trim(),
+    email: document.getElementById('email').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    experience: document.getElementById('experience').value,
+    whyInterested: document.getElementById('whyInterested').value.trim(),
+    availability: document.getElementById('availability').value.trim(),
+    q1: document.querySelector('[name="q1"]').value.trim(),
+    q2: document.querySelector('[name="q2"]').value.trim(),
+    q3: document.querySelector('[name="q3"]').value.trim(),
+    q4: document.querySelector('[name="q4"]').value.trim(),
+    q5: document.querySelector('[name="q5"]').value.trim(),
+    q6: document.querySelector('[name="q6"]').value.trim(),
+    q7: document.querySelector('[name="q7"]').value.trim(),
+    q8: document.querySelector('[name="q8"]').value.trim(),
+    q9: document.querySelector('[name="q9"]').value.trim(),
+    q10: document.querySelector('[name="q10"]').value.trim(),
+    q11: document.querySelector('[name="q11"]').value.trim(),
+    q12: document.querySelector('[name="q12"]').value.trim(),
+    q13: document.querySelector('[name="q13"]').value.trim(),
+    q14: document.querySelector('[name="q14"]').value.trim(),
+    q15: document.querySelector('[name="q15"]').value.trim()
+  };
+
+  alert('Application submitted successfully!\n\nJob: ' + formData.jobTitle + '\nName: ' + formData.fullName);
+
+  applicationForm.reset();
+  showJobsList();
+});
+
+function renderJobs(filter='all',search=''){
+  const list=document.getElementById('jobList');
+  const s=search.toLowerCase();
+  let filtered=jobs.filter(j=>{
+    const mf=filter==='all'||j.type.toLowerCase()===filter||j.difficulty.toLowerCase()===filter;
+    const ms=j.title.toLowerCase().includes(s)||j.company.toLowerCase().includes(s)||j.description.toLowerCase().includes(s);
+    return mf&&ms;
+  });
+  if(filtered.length===0){
+    list.innerHTML=`<p style="color:#444;text-align:center;padding:30px 0;font-size:.85rem;">No jobs found</p>`;
+    return;
+  }
+  list.innerHTML=filtered.map(j=>`
+    <div class="job-card" data-id="${j.id}">
+      <div class="job-card-top">
+        <div class="job-title">${j.title}</div>
+        <div class="salary">${j.salary}</div>
+      </div>
+      <div class="job-meta">
+        <span class="company">${j.company}</span>
+        <span class="badge badge-${j.type.toLowerCase().replace('-','')}">${j.type}</span>
+        <span class="badge badge-${j.difficulty.toLowerCase()}">${j.difficulty}</span>
+      </div>
+      <div class="job-desc">${j.description}</div>
+      <div class="job-card-bottom">
+        <span class="job-posted">${j.posted}</span>
+        <button class="apply-btn" data-id="${j.id}">Apply Now</button>
       </div>
     </div>
-  </div>
+  `).join('');
 
-  <main class="container">
-    <nav>
-      <a class="brand" href="#">
-        <span class="brand-mark">N</span>
-        Nova Studio
-      </a>
+  document.querySelectorAll('.apply-btn').forEach(b=>b.addEventListener('click',function(e){
+    e.stopPropagation();
+    const jobId = parseInt(this.getAttribute('data-id'), 10);
+    showApplicationForm(jobId);
+  }));
+  document.querySelectorAll('.job-card').forEach(c=>c.addEventListener('click',function(){
+    const btn = this.querySelector('.apply-btn');
+    if (btn) btn.click();
+  }));
+}
 
-      <a class="nav-link" href="#channel">Explore channel</a>
-    </nav>
+document.querySelectorAll('.filter-btn').forEach(b=>b.addEventListener('click',function(){
+  document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+  this.classList.add('active');
+  renderJobs(this.dataset.filter,document.getElementById('searchInput').value);
+}));
 
-    <section class="hero" id="channel">
-      <div>
-        <div class="eyebrow">
-          <span></span>
-          New videos every week
-        </div>
+document.getElementById('searchInput').addEventListener('input',function(){
+  renderJobs(document.querySelector('.filter-btn.active').dataset.filter,this.value);
+});
 
-        <h1>Create.<br /><em>Inspire.</em><br />Repeat.</h1>
-
-        <p class="intro">
-          Welcome to Nova Studio — a creative space for ideas, experiments,
-          and stories that make the internet a little more interesting.
-        </p>
-
-        <div class="hero-actions">
-          <a
-            class="button"
-            href="https://youtube.com/@adonistube9?si=DMhpvGlZHhTHfpmD"
-            target="_blank"
-            rel="noopener"
-          >
-            Subscribe on YouTube
-          </a>
-
-          <a class="button secondary" href="#ads">Why follow?</a>
-        </div>
-      </div>
-
-      <aside class="channel-card" id="about">
-        <div class="profile">
-          <div class="avatar">NS</div>
-
-          <div>
-            <h2>@NovaStudio</h2>
-            <p>Creative ideas, made simple.</p>
-          </div>
-        </div>
-
-        <div class="stats">
-          <div class="stat">
-            <strong>124K</strong>
-            <span>Subscribers</span>
-          </div>
-
-          <div class="stat">
-            <strong>86</strong>
-            <span>Videos</span>
-          </div>
-
-          <div class="stat">
-            <strong>4.9</strong>
-            <span>Community rating</span>
-          </div>
-        </div>
-
-        <a
-          class="button"
-          style="width: 100%"
-          href="https://youtube.com/@adonistube9?si=DMhpvGlZHhTHfpmD"
-          target="_blank"
-          rel="noopener"
-        >
-          Join the community
-        </a>
-
-        <p class="card-note">No spam. Just good content.</p>
-      </aside>
-    </section>
-
-    <section class="ads-section" id="ads">
-      <div class="section-heading">
-        <div>
-          <span class="section-kicker">Support Nova Studio</span>
-          <h2>Watch ads, support the channel.</h2>
-        </div>
-
-        <p>
-          A quick ad view helps keep creative videos, experiments, and stories
-          coming.
-        </p>
-      </div>
-
-      <div class="ads-grid">
-        <article class="ad-card">
-          <div class="ad-card-top">
-            <span class="ad-indicator" aria-hidden="true"></span>
-            <span class="ad-badge">Sponsored</span>
-          </div>
-
-          <h3>Creator Spotlight</h3>
-
-          <p>
-            Discover tools and ideas built for the next generation of creators.
-          </p>
-
-          <button class="watch-ad-button" type="button">Watch ad</button>
-        </article>
-
-        <article class="ad-card featured">
-          <div class="ad-card-top">
-            <span class="ad-indicator" aria-hidden="true"></span>
-            <span class="ad-badge">Sponsored</span>
-          </div>
-
-          <h3>Level Up Your Setup</h3>
-
-          <p>
-            Explore creative gear and software that makes producing content
-            easier.
-          </p>
-
-          <button class="watch-ad-button" type="button">Watch ad</button>
-        </article>
-
-        <article class="ad-card">
-          <div class="ad-card-top">
-            <span class="ad-indicator" aria-hidden="true"></span>
-            <span class="ad-badge">Sponsored</span>
-          </div>
-
-          <h3>Fresh Ideas Daily</h3>
-
-          <p>
-            Find inspiration, useful resources, and trends worth knowing about.
-          </p>
-
-          <button class="watch-ad-button" type="button">Watch ad</button>
-        </article>
-
-        <article class="ad-card">
-          <div class="ad-card-top">
-            <span class="ad-indicator" aria-hidden="true"></span>
-            <span class="ad-badge">Sponsored</span>
-          </div>
-
-          <h3>Build Something Better</h3>
-
-          <p>
-            See products and services helping people turn great ideas into
-            action.
-          </p>
-
-          <button class="watch-ad-button" type="button">Watch ad</button>
-        </article>
-
-        <article class="ad-card">
-          <div class="ad-card-top">
-            <span class="ad-indicator" aria-hidden="true"></span>
-            <span class="ad-badge">Sponsored</span>
-          </div>
-
-          <h3>Community Picks</h3>
-
-          <p>
-            Take a look at a hand-picked sponsor message from our community.
-          </p>
-
-          <button class="watch-ad-button" type="button">Watch ad</button>
-        </article>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    const modal = document.getElementById("captchaModal");
-    const verifyBox = document.getElementById("verifyBox");
-    const successMessage = document.getElementById("successMessage");
-    const refreshCheck = document.getElementById("refreshCheck");
-
-    function verify() {
-      if (verifyBox.classList.contains("checked")) return;
-
-      verifyBox.classList.add("checked");
-      verifyBox.setAttribute("aria-checked", "true");
-      successMessage.classList.add("show");
-
-      setTimeout(() => {
-        modal.classList.add("hidden");
-        document.body.classList.remove("locked");
-      }, 800);
-    }
-
-    function resetVerification() {
-      verifyBox.classList.remove("checked");
-      verifyBox.setAttribute("aria-checked", "false");
-      successMessage.classList.remove("show");
-    }
-
-    verifyBox.addEventListener("click", verify);
-
-    verifyBox.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        verify();
-      }
-    });
-
-    refreshCheck.addEventListener("click", resetVerification);
-
-    // Updated: all "Watch ad" buttons now redirect to the specified URL
-    document.querySelectorAll(".watch-ad-button").forEach((button) => {
-      button.addEventListener("click", () => {
-        window.location.href = "https://www.effectivecpmnetwork.com/fmnerbsv?key=72343dee0c9a9ef16e5ba69933d42fbc";
-      });
-    });
-  </script>
+renderJobs();
+</script>
 </body>
 </html>
